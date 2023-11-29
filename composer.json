@@ -16,14 +16,21 @@
   },
   "autoload": {
     "psr-4": {
-      "ValidatorLib\\" : "src/"
-    },
+      "ValidatorLib\\": "src/"
+    }
+  },
     "extra": {
       "laravel": {
         "providers": [
           "ValidatorLib\\ServiceProviders\\ValidatorLibServiceProvider"
         ]
       }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:MuhammedALDRUBI/authorization-management.git"
     }
-  }
+  ]
+
 }
