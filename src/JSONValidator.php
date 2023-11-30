@@ -2,7 +2,7 @@
 
 namespace ValidatorLib;
 
-use ValidatorLib\ValidatorHelpers\Helpers;
+use ValidatorLib\Helpers\Helpers;
 use Illuminate\Contracts\Validation\Validator as ValidationResultOb;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;

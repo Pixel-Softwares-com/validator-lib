@@ -1,6 +1,6 @@
 <?php
 
-namespace ValidatorLib\ValidatorHelpers;
+namespace ValidatorLib\Helpers;
 
 use Exception;
 use Illuminate\Support\MessageBag;
