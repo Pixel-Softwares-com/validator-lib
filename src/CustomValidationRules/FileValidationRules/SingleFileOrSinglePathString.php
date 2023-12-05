@@ -24,7 +24,7 @@ class SingleFileOrSinglePathString implements Rule
                             /**
                              * @TODO Needs to check zip file extension handling (for backup system)
                              */
-                            ["jpg" , "jpeg" , "png"  ,"bmp", "gif", "svg", "webp", "mp4" , "xlsx" , "xls" ,  "json" , "docx" , "pdf"]
+                            ["jpg" , "jpeg" , "png"  ,"bmp", "gif", "svg", "webp", "mp4" , "xlsx" , "csv" , "xls" ,  "json" , "docx" , "pdf"]
                         );
     }
 
