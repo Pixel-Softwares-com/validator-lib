@@ -1,0 +1,36 @@
+{
+  "name": "muhammedaldrubi/validator-lib",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Pixel Company",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "php": "^7.3|^8.0",
+    "laravel/framework": "^8.75",
+    "muhammedaldrubi/authorization-management": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ValidatorLib\\": "src/"
+    }
+  },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "ValidatorLib\\ServiceProviders\\ValidatorLibServiceProvider"
+        ]
+      }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:MuhammedALDRUBI/authorization-management.git"
+    }
+  ]
+
+}
