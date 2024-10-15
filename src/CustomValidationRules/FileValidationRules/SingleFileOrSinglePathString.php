@@ -4,10 +4,12 @@ namespace  ValidatorLib\CustomValidationRules\FileValidationRules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
+use ValidatorLib\CustomValidationRules\FileValidationRules\Traits\FileExtensionCheckingMethods;
 
 class SingleFileOrSinglePathString implements Rule
 {
+    use FileExtensionCheckingMethods;
+  
     /**
      * Create a new rule instance.
      *
@@ -16,16 +18,6 @@ class SingleFileOrSinglePathString implements Rule
     public function __construct()
     {
         //
-    }
-    protected function checkFileExtension(UploadedFile $file) : bool
-    {
-        return in_array(
-                            Str::lower($file->extension()) ,
-                            /**
-                             * @TODO Needs to check zip file extension handling (for backup system)
-                             */
-                            ["jpg" , "jpeg" , "png"  ,"bmp", "gif", "svg", "webp", "mp4" , "xlsx" , "csv" , "xls" ,  "json" , "docx" , "pdf"]
-                        );
     }
 
     /**

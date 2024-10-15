@@ -5,9 +5,11 @@ namespace  ValidatorLib\CustomValidationRules\FileValidationRules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use ValidatorLib\CustomValidationRules\FileValidationRules\Traits\FileExtensionCheckingMethods;
 
 class MultiFileOrMultiPathString implements Rule
 {
+    use FileExtensionCheckingMethods;
     /**
      * Create a new rule instance.
      *
@@ -17,16 +19,7 @@ class MultiFileOrMultiPathString implements Rule
     {
         //
     }
-    protected function checkFileExtension(UploadedFile $file) : bool
-    {
-        return in_array(
-            Str::lower($file->extension()) ,
-            /**
-             * @TODO Needs to check zip file extension handling (for backup system)
-             */
-            ["jpg" , "jpeg" , "png"  ,"bmp", "gif", "svg", "webp", "mp4" , "xlsx" , "csv" , "xls" ,  "json" , "docx" , "pdf"]
-        );
-    }
+    
     protected function checkArrayValue(array $value) : bool
     {
         foreach ($value as $file)
