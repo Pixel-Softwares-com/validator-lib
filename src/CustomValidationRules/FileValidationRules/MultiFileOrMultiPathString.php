@@ -4,7 +4,6 @@ namespace  ValidatorLib\CustomValidationRules\FileValidationRules;
 
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Str;
 use ValidatorLib\CustomValidationRules\FileValidationRules\Traits\FileExtensionCheckingMethods;
 
 class MultiFileOrMultiPathString implements Rule

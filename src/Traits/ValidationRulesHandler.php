@@ -4,7 +4,6 @@ namespace  ValidatorLib\Traits;
 
 use ValidatorLib\Validator;
 use Exception;
-use Illuminate\Validation\Rule;
 
 trait ValidationRulesHandler
 {
