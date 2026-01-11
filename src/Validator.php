@@ -20,6 +20,7 @@ abstract class Validator
 
     protected array $data = [];
     protected BaseFormRequest $requestFormOb;
+    protected bool $isInitializing = false;
 
     /**
      * @param string|BaseFormRequest $requestForm
@@ -27,9 +28,24 @@ abstract class Validator
      */
     public function __construct(string | BaseFormRequest $requestForm , Request | array | null  $request = null)
     {
+        $this->initialize();
         $this->setRequestData($request);
         $this->changeRequestClass($requestForm);
         $this->authorizeRequest();
+        $this->finishInitializing();
+    }
+
+    protected function isInitializing() : void
+    {
+        $this->isInitializing = true;
+    }
+    protected function finishInitializing() : void
+    {
+        $this->isInitializing = false;
+    }
+    protected function isInitialized() : bool
+    {
+        return $this->isInitializing;
     }
 
     protected function IsBaseFormRequest(string | BaseFormRequest $requestForm) : bool
@@ -39,6 +55,10 @@ abstract class Validator
     protected function setBaseRequestForm(BaseFormRequest $requestForm) : Validator
     {
         $this->requestFormOb = $requestForm;
+        // Reset rules to reload from new FormRequest (except during initialization)
+        if (!$this->isInitialized()) {
+            $this->resetRules();
+        }
         return $this;
     }
     /**
@@ -113,12 +133,30 @@ abstract class Validator
             $data = request()->all();
         }
         $this->data = $data;
+        // Reset rules to reload with new data (rules may depend on data)
+        // But skip during initialization (constructor)
+        if (!$this->isInitialized()) {
+            $this->resetRules();
+        }
         return $this;
     }
 
     public function addToRequestData(string $key , mixed $value) : self
     {
         $this->data[$key] = $value;
+        // Reset rules to reload with new data (rules may depend on data)
+        $this->resetRules();
+        return $this;
+    }
+
+    /**
+     * Reset validation rules to be reloaded from FormRequest
+     * @return $this
+     */
+    protected function resetRules(): self
+    {
+        $this->allRules = [];
+        $this->setDefaultRules = true;
         return $this;
     }
 
