@@ -28,7 +28,7 @@ abstract class Validator
      */
     public function __construct(string | BaseFormRequest $requestForm , Request | array | null  $request = null)
     {
-        $this->initialize();
+        $this->isInitializing();
         $this->setRequestData($request);
         $this->changeRequestClass($requestForm);
         $this->authorizeRequest();
