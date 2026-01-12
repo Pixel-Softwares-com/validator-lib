@@ -20,7 +20,7 @@ abstract class Validator
 
     protected array $data = [];
     protected BaseFormRequest $requestFormOb;
-    protected bool $isInitializing = false;
+    protected bool $inInitializing = false;
 
     /**
      * @param string|BaseFormRequest $requestForm
@@ -28,24 +28,28 @@ abstract class Validator
      */
     public function __construct(string | BaseFormRequest $requestForm , Request | array | null  $request = null)
     {
-        $this->isInitializing();
+        $this->startInitialization();
+
         $this->setRequestData($request);
         $this->changeRequestClass($requestForm);
         $this->authorizeRequest();
-        $this->finishInitializing();
+        
+        $this->finishInitialization();
     }
 
-    protected function isInitializing() : void
+    protected function startInitialization() : void
     {
-        $this->isInitializing = true;
+        $this->inInitializing = true;
     }
-    protected function finishInitializing() : void
+
+    protected function finishInitialization() : void
     {
-        $this->isInitializing = false;
+        $this->inInitializing = false;
     }
-    protected function isInitialized() : bool
+
+    protected function isInInitialization() : bool
     {
-        return $this->isInitializing;
+        return $this->inInitializing;
     }
 
     protected function IsBaseFormRequest(string | BaseFormRequest $requestForm) : bool
@@ -56,7 +60,7 @@ abstract class Validator
     {
         $this->requestFormOb = $requestForm;
         // Reset rules to reload from new FormRequest (except during initialization)
-        if (!$this->isInitialized()) {
+        if (!$this->isInInitialization()) {
             $this->resetRules();
         }
         return $this;
@@ -133,7 +137,7 @@ abstract class Validator
         $this->data = $data;
         // Reset rules to reload with new data (rules may depend on data)
         // But skip during initialization (constructor)
-        if (!$this->isInitialized()) {
+        if (!$this->isInInitialization()) {
             $this->resetRules();
         }
         return $this;
@@ -153,7 +157,7 @@ abstract class Validator
      */
     protected function resetRules(): self
     {
-        $this->allRules = [];
+        $this->currentUsedRules = [];
         $this->setDefaultRules = true;
         return $this;
     }
@@ -172,14 +176,16 @@ abstract class Validator
      */
     protected function getValidationResultOb(): ValidationResultOb | null
     {
-        if ($this->setDefaultRules) {
-            $this->AllRules();
+        if (empty($this->currentUsedRules) && $this->setDefaultRules)
+        {
+            $this->setAllRules();
         }
-        if (empty($this->allRules)) {
+        
+        if (empty($this->currentUsedRules)) {
             return null;
         }
         $validationMessages = $this->requestFormOb->messages();
-        return ValidatorFacade::make($this->data, $this->allRules, $validationMessages);
+        return ValidatorFacade::make($this->data, $this->currentUsedRules, $validationMessages);
     }
 
     /**

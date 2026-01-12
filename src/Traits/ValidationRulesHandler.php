@@ -8,7 +8,7 @@ use Exception;
 trait ValidationRulesHandler
 {
 
-    protected array $allRules = [];
+    protected array $currentUsedRules = [];
     protected bool $setDefaultRules = true;
 
     /////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ trait ValidationRulesHandler
      */
     public function applyCustomRuleSet(array $ValidationRuleKeyDetailPairs) : self
     {
-        $this->allRules = $ValidationRuleKeyDetailPairs;
+        $this->currentUsedRules = $ValidationRuleKeyDetailPairs;
         return $this;
     }
     /**
@@ -39,15 +39,15 @@ trait ValidationRulesHandler
     public function OnlyRules(array $ValidationRuleKeys): self
     {
         $newRules = [];
-        $this->AllRules();
+        $this->setAllRules();
         foreach ($ValidationRuleKeys as  $rule)
         {
-            if (is_string($rule) && array_key_exists($rule, $this->allRules))
+            if (is_string($rule) && array_key_exists($rule, $this->currentUsedRules))
             {
-                $newRules[$rule] = $this->allRules[$rule];
+                $newRules[$rule] = $this->currentUsedRules[$rule];
             }
         }
-        $this->allRules = $newRules;
+        $this->currentUsedRules = $newRules;
         return $this;
     }
 
@@ -59,12 +59,12 @@ trait ValidationRulesHandler
      */
     public function ExceptRules(array $NonDesiredValidationRuleKeys): self
     {
-        $this->AllRules();
+        $this->setAllRules();
         foreach ($NonDesiredValidationRuleKeys as $rule)
         {
-            if (is_string($rule) && array_key_exists($rule, $this->allRules))
+            if (is_string($rule) && array_key_exists($rule, $this->currentUsedRules))
             {
-                unset($this->allRules[$rule]) ;
+                unset($this->currentUsedRules[$rule]) ;
             }
         }
         return $this;
@@ -73,9 +73,9 @@ trait ValidationRulesHandler
     /**
      * @return Validator|ValidationRulesHandler
      */
-    public function AllRules() : self
+    public function setAllRules() : self
     {
-        $this->allRules = $this->requestFormOb->rules($this->data);
+        $this->currentUsedRules = $this->requestFormOb->rules($this->data);
         $this->setDefaultRules = false;
         return $this;
     }
@@ -85,7 +85,7 @@ trait ValidationRulesHandler
      */
     public function UnsetRulesAndCancel() : self
     {
-        $this->allRules = [];
+        $this->currentUsedRules = [];
         $this->setDefaultRules = false;
         return $this;
     }
@@ -93,12 +93,12 @@ trait ValidationRulesHandler
     public function applyBailRule(array $onValidationRuleKeys = []) : self
     {
         /** if there is no specific rule set ... bail rule will be applied on the all current used rules */
-        if(empty($onValidationRuleKeys)){$onValidationRuleKeys = array_keys($this->allRules);}
+        if(empty($onValidationRuleKeys)){$onValidationRuleKeys = array_keys($this->currentUsedRules);}
         foreach ($onValidationRuleKeys as $key)
         {
-            if(array_key_exists($key , $this->allRules))
+            if(array_key_exists($key , $this->currentUsedRules))
             {
-                $keyRuleset = $this->allRules[$key];
+                $keyRuleset = $this->currentUsedRules[$key];
                 if(is_array($keyRuleset))
                 {
                     array_unshift($keyRuleset ,"bail"   );
@@ -108,7 +108,7 @@ trait ValidationRulesHandler
                 {
                     $keyRuleset = "bail|" . $keyRuleset;
                 }
-                $this->allRules[$key] = $keyRuleset;
+                $this->currentUsedRules[$key] = $keyRuleset;
             }
         }
         return $this;
@@ -116,6 +116,6 @@ trait ValidationRulesHandler
 
     public function getCurrentlyUsedRule() : array
     {
-        return $this->allRules;
+        return $this->currentUsedRules;
     }
 }
