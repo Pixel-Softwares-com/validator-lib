@@ -76,8 +76,7 @@ abstract class Validator
 
         if (!class_exists($requestForm))
         {
-            $exceptionClass = Helpers::getExceptionClass();
-            throw new $exceptionClass("The Given Request Class Is Invalid Class !");
+            throw new Exception("The Given Request Class Is Invalid Class !");
         }
         /** initializing a new BaseRequestForm object */
         $requestForm = new $requestForm();
@@ -85,8 +84,7 @@ abstract class Validator
         /**  Now We need to check if it is BaseFormRequest Object */
         if (!$this->IsBaseFormRequest($requestForm))
         {
-            $exceptionClass = Helpers::getExceptionClass();
-            throw new $exceptionClass("The Given Request Class Is Invalid Request  Form Class !");
+            throw new Exception("The Given Request Class Is Invalid Request  Form Class !");
         }
         return $this->setBaseRequestForm($requestForm);
     }

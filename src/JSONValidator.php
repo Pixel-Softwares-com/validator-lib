@@ -2,6 +2,7 @@
 
 namespace ValidatorLib;
 
+use Exception;
 use ValidatorLib\Helpers\Helpers;
 use Illuminate\Contracts\Validation\Validator as ValidationResultOb;
 use Illuminate\Http\JsonResponse;
@@ -17,8 +18,7 @@ class JSONValidator extends Validator
     protected function ErrorResponder(ValidationResultOb $validatorResultOb) : array | bool | JsonResponse | RedirectResponse
     {
         $errors = Helpers::getErrorsIndexedArray($validatorResultOb->errors());
-        $exceptionClass = Helpers::getExceptionClass();
-        throw new $exceptionClass(join(" , " , $errors) , 406);
+        throw new Exception(join(" , " , $errors) , 406);
     }
 
 }
